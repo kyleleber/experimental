@@ -24,6 +24,17 @@ const games = [
     repoUrl: 'https://github.com/kyleleber/experimental/tree/main/public/games/skeet',
     featured: true,
   },
+  {
+    id: 'maze-explorer',
+    title: '3D Maze Explorer',
+    description: 'A procedural 3D maze generator and first-person explorer built with X3D components and modular vanilla JavaScript architecture.',
+    tags: ['JavaScript', 'X3D', 'Procedural', 'WebGL'],
+    status: 'In Development',
+    category: 'Simulation',
+    playUrl: '/games/maze_explorer/',
+    repoUrl: 'https://github.com/kyleleber/experimental/tree/main/public/games/maze_explorer',
+    featured: true,
+  },
 ];
 
 export default function App() {

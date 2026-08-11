@@ -10,10 +10,11 @@ Each project is built and served through the main application and can be accesse
 
 ### Games
 
-| Game         | Description                                                                                               | Route             |
-| ------------ | --------------------------------------------------------------------------------------------------------- | ----------------- |
-| **X3PLORER** | 3D browser-based arena shooter featuring procedural environments, creature AI, and X3DOM/WebGL rendering. | `/games/x3plorer` |
-| **X3PLORER** | 3D browser-based skeet / trap shooting simulator.                                                         | `/games/skeet` |
+| Game              | Description                                                                                               | Route                  |
+|-------------------|-----------------------------------------------------------------------------------------------------------|------------------------|
+| **X3PLORER**      | 3D browser-based arena shooter featuring procedural environments, creature AI, and X3DOM/WebGL rendering. | `/games/x3plorer`      |
+| **Skeet Shoot**   | 3D browser-based skeet / trap shooting simulator.                                                         | `/games/skeet`         |
+| **Maze Explorer** | 3D browser-based maze generator and explorer.                                                             | `/games/maze_explorer` |
 
 ## Architecture
 
@@ -101,7 +102,8 @@ Individual projects contain their own README files with project-specific informa
 
 ## Current projects
 * [`X3PLORER`](./src/games/x3plorer/README.md) — 3D browser arena shooter
-* [`X3D Skeet Shoot`](./src/games/x3plorer/README.md) — 3D browser trap/skeet simulator.
+* [`X3D Skeet Shoot`](./src/games/skeet/README.md) — 3D browser trap/skeet simulator.
+* [`Maze Explorer`](./src/games/maze_explorer/README.md) — 3D browser maze generator and explorer
 
 ## Contributing
 Feel free to shoot me a message or put in a pull request for anything you're working on

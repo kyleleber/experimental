@@ -231,7 +231,7 @@ function update() {
             targets.forEach(t => {
                 if (t.active && !t.isExploding) {
                     const dist = Math.hypot(t.posX - p.x, t.posY - p.y, t.posZ - p.z);
-                    if (dist < 0.75) {
+                    if (dist < 0.45) {
                         score++;
                         hitsInRound++;
                         t.active = false;

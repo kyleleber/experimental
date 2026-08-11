@@ -14,6 +14,7 @@ export default defineConfig({
         main: resolve(import.meta.dirname, 'index.html'),
         'games/x3plorer': resolve(import.meta.dirname, '/public/games/x3plorer/index.html'),
         'games/skeet': resolve(import.meta.dirname, '/public/games/skeet/index.html'),
+        'games/maze_explorer': resolve(import.meta.dirname, '/public/games/maze_explorer/index.html'),
       },
     },
   },

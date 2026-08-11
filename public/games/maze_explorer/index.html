@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Maze Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://www.x3dom.org/download/x3dom.css">
+    <script src="https://www.x3dom.org/download/x3dom.js"></script>
+    <style>
+        #sidebar {
+            transition: transform 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+            margin-left: 0;
+        }
+        #sidebar.collapsed {
+            transform: translateX(-100%);
+            margin-left: -20rem; /* w-80 equivalent to completely free up layout space */
+        }
+    </style>
+</head>
+<body class="h-full m-0 bg-slate-950 text-slate-100 overflow-hidden flex flex-row font-sans relative">
+
+<aside id="sidebar" class="w-80 bg-slate-900 border-r border-slate-700/80 flex flex-col z-20 overflow-y-auto shadow-2xl relative shrink-0">
+    <div class="px-6 py-5 border-b border-slate-700/80 bg-slate-950/40 flex items-center justify-between">
+        <div>
+            <h1 class="text-xl font-bold tracking-tight text-white">Maze Explorer</h1>
+            <p class="text-xs text-slate-300 mt-0.5">Settings & Configuration</p>
+        </div>
+        <button id="toggle-sidebar-btn" aria-label="Minimize sidebar" class="p-2 text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-800 rounded-lg border border-slate-700 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="p-6 space-y-6 text-sm">
+        <section class="space-y-4">
+            <h2 class="text-xs font-bold text-indigo-300 uppercase tracking-wider">Maze Settings</h2>
+            <div class="space-y-3.5">
+                <div>
+                    <label for="maze-width" class="block text-xs font-medium text-slate-200 mb-1.5">Grid Width (Odd)</label>
+                    <input type="number" id="maze-width" value="25" step="2" min="5" class="w-full bg-slate-950 border border-slate-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/25">
+                </div>
+                <div>
+                    <label for="maze-height" class="block text-xs font-medium text-slate-200 mb-1.5">Grid Height (Odd)</label>
+                    <input type="number" id="maze-height" value="25" step="2" min="5" class="w-full bg-slate-950 border border-slate-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/25">
+                </div>
+                <div>
+                    <label for="tile-size" class="block text-xs font-medium text-slate-200 mb-1.5">Tile Size</label>
+                    <input type="number" id="tile-size" value="4" step="1" min="1" class="w-full bg-slate-950 border border-slate-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/25">
+                </div>
+                <div>
+                    <label for="wall-height" class="block text-xs font-medium text-slate-200 mb-1.5">Wall Height</label>
+                    <input type="number" id="wall-height" value="4" step="0.5" min="1" class="w-full bg-slate-950 border border-slate-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/25">
+                </div>
+                <div>
+                    <label for="player-speed" class="block text-xs font-medium text-slate-200 mb-1.5">Movement Speed</label>
+                    <input type="number" id="player-speed" value="0.15" step="0.01" min="0.05" max="1.0" class="w-full bg-slate-950 border border-slate-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/25">
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-xs font-bold text-indigo-300 uppercase tracking-wider">Game Mode</h2>
+            <div class="space-y-3.5">
+                <div>
+                    <label for="timer-mode" class="block text-xs font-medium text-slate-200 mb-1.5">Mode</label>
+                    <select id="timer-mode" class="w-full bg-slate-950 border border-slate-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/25">
+                        <option value="stopwatch">Stopwatch</option>
+                        <option value="countdown">Countdown</option>
+                    </select>
+                </div>
+                <div id="countdown-settings" class="hidden">
+                    <label for="timer-limit" class="block text-xs font-medium text-slate-200 mb-1.5">Seconds</label>
+                    <input type="number" id="timer-limit" value="60" min="10" class="w-full bg-slate-950 border border-slate-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/25">
+                </div>
+                <button id="regenerate-btn" class="w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-lg shadow-indigo-600/30 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                    Start New Game
+                </button>
+            </div>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="text-xs font-bold text-indigo-300 uppercase tracking-wider">Statistics</h2>
+            <div class="space-y-2.5 text-xs text-slate-300 bg-slate-950/40 p-3.5 rounded-lg border border-slate-800">
+                <div class="flex justify-between items-center"><span class="font-medium">Best Time (Stopwatch)</span> <span id="best-stopwatch" class="text-indigo-300 font-mono font-bold text-sm">--:--</span></div>
+                <div class="flex justify-between items-center"><span class="font-medium">Best Time (Countdown)</span> <span id="best-countdown" class="text-indigo-300 font-mono font-bold text-sm">--:--</span></div>
+            </div>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="text-xs font-bold text-indigo-300 uppercase tracking-wider">Save / Load</h2>
+            <div class="grid grid-cols-2 gap-2.5">
+                <button id="export-btn" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-xs font-semibold rounded-lg transition-all cursor-pointer border border-slate-600 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                    Export JSON
+                </button>
+                <label class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-xs font-semibold rounded-lg transition-all cursor-pointer border border-slate-600 text-slate-200 text-center flex items-center justify-center focus-within:ring-2 focus-within:ring-indigo-400">
+                    Import JSON
+                    <input type="file" id="import-input" accept=".json" class="hidden">
+                </label>
+            </div>
+        </section>
+
+        <section class="space-y-3 pt-4 border-t border-slate-800">
+            <h2 class="text-xs font-bold text-indigo-300 uppercase tracking-wider">Controls</h2>
+            <div class="space-y-2 text-xs text-slate-300">
+                <div class="flex justify-between py-0.5"><span>Move</span> <span class="text-white font-mono font-semibold bg-slate-800 px-2 py-0.5 rounded border border-slate-700">W, S</span></div>
+                <div class="flex justify-between py-0.5"><span>Look</span> <span class="text-white font-mono font-semibold bg-slate-800 px-2 py-0.5 rounded border border-slate-700">Mouse</span></div>
+                <div class="flex justify-between py-0.5"><span>Reset Pos</span> <span class="text-white font-mono font-semibold bg-slate-800 px-2 py-0.5 rounded border border-slate-700">R</span></div>
+                <div class="flex justify-between py-0.5"><span>Hint (Map)</span> <span class="text-white font-mono font-semibold bg-slate-800 px-2 py-0.5 rounded border border-slate-700">H (Hold)</span></div>
+                <div class="mt-4 p-3.5 bg-indigo-950/40 border border-indigo-500/30 rounded-lg text-slate-200 leading-relaxed">
+                    Click the view to lock mouse and start exploring. Press <span class="text-white font-mono font-semibold">ESC</span> to unlock.
+                </div>
+            </div>
+        </section>
+    </div>
+</aside>
+
+<!-- Expand Sidebar Button (Always available, subtly docked or floating on the top left) -->
+<button id="expand-sidebar-btn" aria-label="Open sidebar" class="absolute top-4 left-4 z-20 p-2.5 bg-slate-900/90 text-slate-300 hover:text-white rounded-xl border border-slate-700 shadow-2xl backdrop-blur-md hidden transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-400">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+    </svg>
+</button>
+
+<main class="relative flex-1 h-full">
+    <div id="lock-screen" class="absolute inset-0 z-30 flex items-center justify-center bg-slate-950/85 backdrop-blur-sm cursor-pointer">
+        <div class="text-center p-8 bg-slate-900 rounded-2xl border border-slate-700 shadow-2xl max-w-md w-full mx-4">
+            <p id="lock-status" class="text-xl font-bold mb-2 text-white">Click to start exploring</p>
+            <p id="lock-substatus" class="text-sm text-slate-300 mb-6">W/S to move, Mouse to look</p>
+            <button id="reset-game-btn" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all hidden w-full focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                Try Again
+            </button>
+        </div>
+    </div>
+
+    <!-- HUD Overlay -->
+    <div id="hud" class="absolute top-5 right-5 z-10 pointer-events-none text-right">
+        <div class="bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 shadow-2xl backdrop-blur-md">
+            <div id="timer-display" class="text-3xl font-mono font-black text-indigo-400 tracking-tight">00:00.0</div>
+            <div id="timer-label" class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mt-0.5">Stopwatch</div>
+        </div>
+    </div>
+
+    <!-- Crosshair -->
+    <div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+        <div class="w-4 h-4 border-2 border-white/70 rounded-full"></div>
+        <div class="absolute w-1.5 h-1.5 bg-indigo-400 rounded-full shadow-[0_0_6px_rgba(129,140,248,0.8)]"></div>
+    </div>
+
+    <!-- Minimap / Hint Overlay -->
+    <div id="minimap-container" class="absolute bottom-5 right-5 w-64 h-64 bg-slate-900/95 border-2 border-indigo-500/60 rounded-xl overflow-hidden hidden z-10 pointer-events-none shadow-2xl backdrop-blur-md">
+        <canvas id="minimap-canvas" class="w-full h-full opacity-90"></canvas>
+    </div>
+
+    <x3d id="x3d-element" class="w-full h-full block">
+        <scene id="scene-root">
+            <navigationInfo headlight="true" type="NONE"></navigationInfo>
+            <background skyColor="0.25 0.55 0.85" groundColor="0.15 0.35 0.15"></background>
+            <fog visibilityRange="3000" color="0.25 0.55 0.85" fogType="EXPONENTIAL"></fog>
+            <directionalLight direction="-0.5 -1 -0.3" color="1.0 0.95 0.8" intensity="1.6" ambientIntensity="0.7"></directionalLight>
+
+            <!-- Explicit orientation facing into the maze corridor -->
+            <viewpoint id="player-view" position="0 2 0" orientation="0 1 0 0" description="Player View"></viewpoint>
+
+            <transform id="ground-transform" translation="0 -0.1 0">
+                <shape>
+                    <appearance>
+                        <material diffuseColor="0.16 0.22 0.12" specularColor="0.1 0.1 0.1" shininess="0.2"></material>
+                    </appearance>
+                    <box size="1000 0.2 1000"></box>
+                </shape>
+            </transform>
+
+            <group id="procedural-world"></group>
+        </scene>
+    </x3d>
+</main>
+
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggle-sidebar-btn');
+    const expandBtn = document.getElementById('expand-sidebar-btn');
+    const lockScreen = document.getElementById('lock-screen');
+
+    function collapseSidebar() {
+        sidebar.classList.add('collapsed');
+        expandBtn.classList.remove('hidden');
+    }
+
+    function expandSidebar() {
+        sidebar.classList.remove('collapsed');
+        expandBtn.classList.add('hidden');
+    }
+
+    toggleBtn.addEventListener('click', collapseSidebar);
+    expandBtn.addEventListener('click', expandSidebar);
+
+    // Automatically expand sidebar when the game is paused, reset, won, lost, or ESC is pressed (lock screen appears)
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'style') {
+                const isHidden = lockScreen.style.display === 'none';
+                if (!isHidden) {
+                    // Lock screen is visible (paused/game over/reset) -> bring sidebar back
+                    expandSidebar();
+                }
+            }
+        });
+    });
+
+    observer.observe(lockScreen, { attributes: true });
+
+    // Also catch ESC key or click events that unlock/pause
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            expandSidebar();
+        }
+    });
+</script>
+<script type="module" src="./main.js"></script>
+</body>
+</html>
