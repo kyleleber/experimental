@@ -13,6 +13,7 @@ Each project is built and served through the main application and can be accesse
 | Game         | Description                                                                                               | Route             |
 | ------------ | --------------------------------------------------------------------------------------------------------- | ----------------- |
 | **X3PLORER** | 3D browser-based arena shooter featuring procedural environments, creature AI, and X3DOM/WebGL rendering. | `/games/x3plorer` |
+| **X3PLORER** | 3D browser-based skeet / trap shooting simulator.                                                         | `/games/skeet` |
 
 ## Architecture
 
