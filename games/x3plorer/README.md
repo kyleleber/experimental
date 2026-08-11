@@ -34,34 +34,34 @@ X3PLORER explores the use of declarative 3D graphics, procedural world generatio
 
 ## Game Structure
 
-The game is organized into focused modules responsible for the major systems within X3PLORER:
+The game is organized into focused, object-oriented modules:
 
 ```text
-├── index.html        # Game entry point and X3D scene
-├── game.js           # Game state, game loop, and initialization
-├── config.js         # Configuration, constants, and shared state
-├── player.js         # First-person controls, aiming, and movement
-├── monsters.js       # Creature spawning, AI, flanking, and combat behavior
-├── combat.js         # Weapons, raycasting, projectiles, and scoring
-├── world.js          # Procedural terrain, environment, lighting, and sky
-└── ui.js             # HUD, radar, reload indicators, and game UI
+├── index.html                  # Game entry point and X3D scene
+├── game.js                     # Main entry point, wires systems together
+├── config.js                   # Configuration, constants, and shared state
+├── modules/
+│   └── core/
+│       ├── GameEngine.js       # Core animation loop and system management
+│       ├── Player.js           # First-person controls and movement
+│       ├── EntityManager.js    # Entity spawning, AI, and collection logic
+│       ├── CombatSystem.js     # Weapons, raycasting, and scoring
+│       └── UIManager.js        # HUD, radar, and UI state management
+├── world/                      # Procedural world generation modules
+│   ├── forest.js               # Tree and obstacle generation
+│   ├── wildlife.js             # Bird and squirrel population
+│   └── ...                     # Mountains, sky, water
+└── models/                     # External X3D models (tree.x3d, etc.)
 ```
 
-## Gameplay
+## Features
 
-X3PLORER drops the player into a procedurally generated 3D arena populated by hostile creatures.
-
-The player must move through the environment, identify threats using the tactical radar, and engage enemies using the game's weapon systems.
-
-Creatures use several AI behaviors to make encounters more dynamic, including:
-
-* Procedural spawning
-* Player pursuit
-* Flanking
-* Combat engagement
-* Movement and positioning
-
-The goal is to create an active arena environment without relying on a heavyweight game engine.
+* **OO Architecture**: Resilient and extensible system-based design.
+* **Procedural World**: Dynamic generation of terrain, forests, and wildlife.
+* **Scary AI**: Hostile creatures with pursuit, flanking, and terrifying visual designs.
+* **Objectives**: Collectible Target objects scattered across the arena.
+* **Tactical Radar**: Real-time tracking of threats.
+* **Animated Wildlife**: Procedural birds and squirrels with improved detail.
 
 ## Controls
 

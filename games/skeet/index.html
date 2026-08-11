@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>X3D Skeet Shoot</title>
+    <link rel="stylesheet" href="https://www.x3dom.org/download/x3dom.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.x3dom.org/download/x3dom.js"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans h-screen w-screen overflow-hidden flex flex-col items-center justify-between m-0 p-4 select-none">
+
+<!-- Setup Modal / Configuration Overlay -->
+<div id="configModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-xl w-full p-8 shadow-2xl flex flex-col gap-6">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-bold bg-orange-500/20 text-orange-400 px-2.5 py-1 rounded-md uppercase tracking-widest border border-orange-500/30">Ballistics Lab</span>
+                <span class="text-xs text-zinc-500 uppercase tracking-widest font-semibold">v1.0</span>
+            </div>
+            <h2 class="text-3xl font-black text-white uppercase tracking-tight italic">Select Game Mode</h2>
+            <p class="text-sm text-zinc-400 mt-1">Configure your field loadout and select a shooting discipline before stepping up to the firing line:</p>
+        </div>
+
+        <!-- Loadout Configuration Options -->
+        <div class="grid grid-cols-2 gap-4 bg-zinc-950/60 p-4 rounded-xl border border-zinc-800/80">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider">Choke Spread</label>
+                <select id="chokeSelect" class="bg-zinc-900 border border-zinc-700 text-zinc-200 text-sm rounded-lg p-2.5 focus:outline-none focus:border-orange-500 transition-colors">
+                    <option value="cylinder">Cylinder (Wide Spread)</option>
+                    <option value="modified" selected>Modified (Balanced)</option>
+                    <option value="full">Full Choke (Tight Pattern)</option>
+                </select>
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-bold text-zinc-300 uppercase tracking-wider">Target Velocity</label>
+                <select id="speedSelect" class="bg-zinc-900 border border-zinc-700 text-zinc-200 text-sm rounded-lg p-2.5 focus:outline-none focus:border-orange-500 transition-colors">
+                    <option value="standard" selected>Standard Match</option>
+                    <option value="hyper">Hyper-Velocity (Fast)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3.5">
+            <button onclick="startGame('trap')" class="text-left p-5 rounded-xl bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700/60 hover:border-orange-500 transition-all group shadow-lg">
+                <div class="flex justify-between items-center mb-1.5">
+                    <span class="font-extrabold text-orange-400 text-lg group-hover:text-orange-300 transition-colors">Trap Shooting</span>
+                    <span class="text-xs bg-orange-500/20 text-orange-300 px-2.5 py-1 rounded-md uppercase tracking-wider font-semibold border border-orange-500/30">Single House</span>
+                </div>
+                <p class="text-sm text-zinc-300 leading-relaxed">Targets launch from a single bunker directly in front of you, flying away from the shooter at dynamic randomized angles and elevations.</p>
+            </button>
+
+            <button onclick="startGame('skeet')" class="text-left p-5 rounded-xl bg-zinc-800/60 hover:bg-zinc-800 border border-zinc-700/60 hover:border-orange-500 transition-all group shadow-lg">
+                <div class="flex justify-between items-center mb-1.5">
+                    <span class="font-extrabold text-orange-400 text-lg group-hover:text-orange-300 transition-colors">Skeet Shooting</span>
+                    <span class="text-xs bg-orange-500/20 text-orange-300 px-2.5 py-1 rounded-md uppercase tracking-wider font-semibold border border-orange-500/30">Crossing Houses</span>
+                </div>
+                <p class="text-sm text-zinc-300 leading-relaxed">Targets cross laterally across your field of view from two opposing high and low houses, meticulously simulating high-speed crossing game birds.</p>
+            </button>
+        </div>
+    </div>
+</div>
+
+<main class="absolute inset-0 w-full h-full -z-0">
+    <x3d class="w-full h-full" showStat="false" showLog="false">
+        <scene>
+            <!-- Camera Viewpoint with locked navigationType -->
+            <viewpoint id="playerView" position="0 1.6 8" orientation="1 0 0 -0.1" description="Player View"></viewpoint>
+
+            <navigationInfo type='"NONE"'></navigationInfo>
+
+            <!-- Lighting -->
+            <directionalLight direction="0 -1 -0.5" intensity="1.0" ambientIntensity="0.4"></directionalLight>
+
+            <!-- Environment (Sky and Ground) -->
+            <background skyColor="0.4 0.7 1.0" groundColor="0.1 0.4 0.1"></background>
+
+            <!-- Ground Plane -->
+            <shape>
+                <appearance>
+                    <material diffuseColor="0.15 0.35 0.15"></material>
+                </appearance>
+                <box size="200 0.1 200"></box>
+            </shape>
+
+            <!-- Projectiles (Shotgun Spray) -->
+            <transform id="projectileGroup" translation="0 -100 0">
+                <transform id="pellet0"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet1"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet2"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet3"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet4"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet5"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet6"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet7"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet8"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet9"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet10"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+                <transform id="pellet11"><shape><appearance><material diffuseColor="1 1 0" emissiveColor="0.5 0.5 0"></material></appearance><sphere radius="0.06"></sphere></shape></transform>
+            </transform>
+
+            <!-- Target Group -->
+            <transform id="targetTransform" translation="0 -10 0">
+                <switch id="targetSwitch" whichChoice="0">
+                    <shape id="targetShape">
+                        <touchsensor id="targetSensor"></touchsensor>
+                        <appearance>
+                            <material diffuseColor="0.9 0.4 0.1" specularColor="1 1 1"></material>
+                        </appearance>
+                        <cylinder radius="0.4" height="0.08"></cylinder>
+                    </shape>
+                    <!-- Enhanced Powderized Shatter Explosion State (choice 1) -->
+                    <group id="explosionGroup">
+                        <transform translation="0.05 0.02 -0.05" rotation="1 0.5 0.2 1.5"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.12 0.03 0.12"></box></shape></transform>
+                        <transform translation="-0.08 -0.03 0.04" rotation="0.2 1 0.5 2.1"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.10 0.03 0.10"></box></shape></transform>
+                        <transform translation="0.12 -0.05 0.08" rotation="0.8 0.2 1 0.9"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.09 0.03 0.09"></box></shape></transform>
+                        <transform translation="-0.15 0.08 -0.06" rotation="1 1 0.1 3.2"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.14 0.03 0.14"></box></shape></transform>
+                        <transform translation="0.02 0.12 0.15" rotation="0.3 0.8 1 1.8"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.08 0.03 0.08"></box></shape></transform>
+                        <transform translation="-0.04 -0.12 -0.12" rotation="1 0.2 0.8 2.5"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.11 0.03 0.11"></box></shape></transform>
+                        <transform translation="0.18 0.06 -0.10" rotation="0.5 1 0.3 1.1"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.07 0.03 0.07"></box></shape></transform>
+                        <transform translation="-0.12 -0.08 0.14" rotation="0.9 0.5 1 2.8"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.10 0.03 0.10"></box></shape></transform>
+                        <transform translation="0.08 -0.15 0.02" rotation="1 0.9 0.4 0.6"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.09 0.03 0.09"></box></shape></transform>
+                        <transform translation="-0.06 0.15 -0.04" rotation="0.4 1 0.9 1.9"><shape><appearance><material diffuseColor="0.95 0.45 0.1" emissiveColor="0.3 0.1 0"></material></appearance><box size="0.12 0.03 0.12"></box></shape></transform>
+                    </group>
+                </switch>
+            </transform>
+
+        </scene>
+    </x3d>
+</main>
+
+<!-- Bottom HUD / Control Bar -->
+<footer class="relative z-10 pointer-events-none w-full max-w-2xl mt-auto mb-3">
+    <div class="bg-zinc-950/85 border border-zinc-800/90 backdrop-blur-xl px-6 py-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-6">
+
+        <!-- Branding / App Title -->
+        <div class="flex items-center gap-3.5">
+            <div class="w-3.5 h-3.5 rounded-full bg-orange-500 animate-pulse shadow-[0_0_12px_rgba(249,115,22,0.6)]"></div>
+            <div class="flex flex-col">
+                <span class="text-sm font-black tracking-wider text-white uppercase italic leading-tight" id="gameModeTitle">Skeet / Trap</span>
+                <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.2em]">Ballistics Sim</span>
+            </div>
+        </div>
+
+        <!-- Metrics Display -->
+        <div class="flex items-center gap-4">
+            <!-- Score Counter -->
+            <div class="bg-zinc-900 border border-zinc-800 px-5 py-2 rounded-xl flex items-center gap-3.5 shadow-inner">
+                <span class="text-xs text-zinc-400 font-extrabold uppercase tracking-widest">Score</span>
+                <span id="hudScore" class="text-2xl font-mono font-black text-orange-400 leading-none">000</span>
+            </div>
+
+            <!-- Misses Counter -->
+            <div class="bg-zinc-900 border border-zinc-800 px-5 py-2 rounded-xl flex items-center gap-3.5 shadow-inner">
+                <span class="text-xs text-zinc-400 font-extrabold uppercase tracking-widest">Misses</span>
+                <span id="hudMisses" class="text-2xl font-mono font-black text-zinc-300 leading-none">00</span>
+            </div>
+        </div>
+
+    </div>
+</footer>
+
+  <script type="module">
+    import './js/ballistics.js';
+    import './js/game.js';
+  </script>
+
+</body>
+</html>

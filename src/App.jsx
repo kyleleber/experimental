@@ -5,11 +5,11 @@ const games = [
   {
     id: 'x3plorer',
     title: 'X3PLORER',
-    description: 'A 3D browser space exploration game built with X3D components and JavaScript, featuring a custom radar and HUD.',
+    description: 'A 3D browser shooting/survival game built with X3D components and JavaScript, featuring a custom radar and HUD.',
     tags: ['JavaScript', 'X3D', 'Canvas', 'WebGL'],
     status: 'In Development',
     playUrl: '/games/x3plorer/',
-    repoUrl: 'https://github.com/kyleleber/experimental/tree/main/x3plorer',
+    repoUrl: 'https://github.com/kyleleber/experimental/tree/main/games/x3plorer',
     featured: true,
   },
 ];

@@ -1,11 +1,17 @@
+/**
+ * Builds the sky environment, including a pulsating sun and floating clouds.
+ * Uses X3D animation nodes (TimeSensor, Interpolators, ROUTES) for movement 
+ * and effects entirely within the X3D scene graph.
+ * @param {HTMLElement} worldGroup - The X3D group to append sky elements to.
+ */
 export function buildSkyAndSun(worldGroup) {
     const skyGroup = document.createElement('group');
 
-    // 1. Radiant Yellow Sun positioned closer and directly visible in the sky view
+    // 1. Radiant Yellow Sun positioned high in the sky
     const sunTrans = document.createElement('transform');
     sunTrans.setAttribute('translation', '0 350 -400');
 
-    // Sun Core
+    // Sun Core - a bright yellow emissive sphere
     const sunShape = document.createElement('shape');
     const sunApp = document.createElement('appearance');
     const sunMat = document.createElement('material');
@@ -14,11 +20,11 @@ export function buildSkyAndSun(worldGroup) {
     sunShape.appendChild(sunApp);
 
     const sunSphere = document.createElement('sphere');
-    sunSphere.setAttribute('radius', '60'); // Larger visible size
+    sunSphere.setAttribute('radius', '60');
     sunShape.appendChild(sunSphere);
     sunTrans.appendChild(sunShape);
 
-    // Volumetric Sun Rays (Intersecting starburst corona)
+    // Volumetric Sun Rays (starburst corona effect)
     const rayGroup = document.createElement('group');
     const rayCount = 8;
     for (let r = 0; r < rayCount; r++) {
@@ -43,6 +49,7 @@ export function buildSkyAndSun(worldGroup) {
     sunTrans.appendChild(rayGroup);
 
     // Animation Nodes for Sun Pulsing & Corona Scaling
+    // This allows the sun to pulse without any extra JavaScript logic in the main loop
     const sunTimer = document.createElement('TimeSensor');
     sunTimer.setAttribute('ID', 'sun-anim-timer');
     sunTimer.setAttribute('cycleInterval', '4.0');
@@ -74,17 +81,18 @@ export function buildSkyAndSun(worldGroup) {
     route2.setAttribute('toField', 'scale');
     skyGroup.appendChild(sunScaleTrans);
 
-    // 2. Floating procedural clouds kept at safe heights so they don't occlude the sun
+    // 2. Floating procedural clouds
     const cloudCount = 6;
     for (let c = 0; c < cloudCount; c++) {
         const startX = (Math.random() - 0.5) * 600;
-        const startZ = -100 - Math.random() * 400; // Offset forward/sideways so clouds don't block the sun at (0, 350, -400)
+        const startZ = -100 - Math.random() * 400; 
         const startY = 320 + Math.random() * 60;
 
         const cloudTrans = document.createElement('transform');
         cloudTrans.setAttribute('ID', `cloud-trans-${c}`);
         cloudTrans.setAttribute('translation', `${startX} ${startY} ${startZ}`);
 
+        // Construct each cloud from multiple puffs (spheres)
         const cloudGroup = document.createElement('group');
         const puffCount = 4 + Math.floor(Math.random() * 3);
         for (let p = 0; p < puffCount; p++) {
@@ -109,6 +117,7 @@ export function buildSkyAndSun(worldGroup) {
         }
         cloudTrans.appendChild(cloudGroup);
 
+        // Animate cloud movement using X3D PositionInterpolator
         const cloudTimer = document.createElement('TimeSensor');
         cloudTimer.setAttribute('ID', `cloud-timer-${c}`);
         cloudTimer.setAttribute('cycleInterval', `${70 + c * 20}`);
