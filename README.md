@@ -89,11 +89,18 @@ Some may turn into something bigger.
 
 That's kind of the point.
 
+Use AI responsibly.
+
 ## Documentation
 
 Individual projects contain their own README files with project-specific information, including architecture, technologies, gameplay mechanics, controls, and implementation details.
 
-For example:
-
+## Current projects
 * [`X3PLORER`](./src/games/x3plorer/README.md) — 3D browser arena shooter
-* Additional projects will be documented here as they are added.
+* [`X3D Skeet Shoot`](./src/games/x3plorer/README.md) — 3D browser trap/skeet simulator.
+
+## Contributing
+Feel free to shoot me a message or put in a pull request for anything you're working on
+or want to collaborate on! Always happy to have a chat about things. Cheers!
+
+kyleleber2014@gmail.com
