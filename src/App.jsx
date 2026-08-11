@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Gamepad2, ExternalLink, GitBranch, Terminal, Sparkles, Sun, Moon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Gamepad2, ExternalLink, GitBranch, Terminal, Sparkles, Sun, Moon, ShieldCheck, Cookie, Lock, Eye } from 'lucide-react';
 
 const games = [
   {
@@ -25,7 +25,48 @@ const games = [
 ];
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved !== null) {
+      return saved === 'dark';
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  const [cookieConsent, setCookieConsent] = useState(() => {
+    return localStorage.getItem('cookie_consent');
+  });
+
+  const [showPreferences, setShowPreferences] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    if (cookieConsent === 'accepted') {
+      if (!window.dataLayer) {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-77RJH85DB0';
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-77RJH85DB0');
+      }
+    }
+  }, [cookieConsent]);
+
+  const handleConsent = (choice) => {
+    localStorage.setItem('cookie_consent', choice);
+    setCookieConsent(choice);
+    setShowPreferences(false);
+  };
+
+  const isBannerVisible = !cookieConsent || showPreferences;
 
   return (
       <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${isDarkMode ? 'bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white' : 'bg-slate-100 text-slate-900 selection:bg-indigo-600 selection:text-white'}`}>
@@ -153,8 +194,60 @@ export default function App() {
 
         {/* Footer */}
         <footer className={`border-t py-8 px-6 text-center text-xs font-medium transition-colors duration-300 ${isDarkMode ? 'border-slate-800 text-slate-400 bg-slate-950' : 'border-slate-300 text-slate-700 bg-white'}`}>
-          <p>Built with React & Tailwind CSS. Hosted independently.</p>
+          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>Built with React & Tailwind CSS. Hosted independently.</p>
+            <button
+                onClick={() => setShowPreferences(true)}
+                className={`inline-flex items-center gap-1.5 transition-colors underline underline-offset-4 ${isDarkMode ? 'text-slate-400 hover:text-slate-200' : 'text-slate-600 hover:text-slate-900'}`}
+            >
+              <Cookie className="w-3.5 h-3.5" />
+              <span>Privacy & Cookie Preferences</span>
+            </button>
+          </div>
         </footer>
+
+        {/* Larger Floating Privacy & Cookie Popup (Right Side) */}
+        {isBannerVisible && (
+            <div className={`fixed bottom-6 right-6 z-50 max-w-md w-full p-7 border rounded-2xl shadow-2xl transition-all duration-300 animate-in fade-in slide-in-from-bottom-5 ${isDarkMode ? 'bg-slate-900 border-slate-800 text-slate-200 shadow-black/50' : 'bg-white border-slate-300 text-slate-800 shadow-slate-300/50'}`}>
+              <div className="flex items-start gap-3.5 mb-4">
+                <div className={`p-2.5 rounded-xl border shrink-0 mt-0.5 ${isDarkMode ? 'bg-indigo-950 border-indigo-700 text-indigo-300' : 'bg-indigo-100 border-indigo-300 text-indigo-800'}`}>
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-base mb-1.5">Privacy & Analytics Preferences</h3>
+                  <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                    We respect your privacy. Local storage is used strictly to remember your preferred theme settings.
+                  </p>
+                </div>
+              </div>
+
+              <div className={`space-y-2.5 mb-5 p-3.5 rounded-xl border text-xs leading-relaxed ${isDarkMode ? 'bg-slate-950/60 border-slate-800 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-700'}`}>
+                <div className="flex items-start gap-2">
+                  <Lock className="w-4 h-4 shrink-0 text-indigo-500 mt-0.5" />
+                  <span><strong>No Data Sales:</strong> Your personal information and browsing data are never sold, traded, or shared with third-party data brokers.</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Eye className="w-4 h-4 shrink-0 text-indigo-500 mt-0.5" />
+                  <span><strong>Optional Analytics:</strong> If accepted, Google Analytics cookies help us anonymously understand site traffic, device types, and usage patterns to improve performance. Essential functionality works regardless of your choice.</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-2.5">
+                <button
+                    onClick={() => handleConsent('declined')}
+                    className={`w-full py-2.5 text-sm font-semibold rounded-xl border transition-colors ${isDarkMode ? 'border-slate-700 text-slate-300 hover:bg-slate-800' : 'border-slate-300 text-slate-700 hover:bg-slate-100'}`}
+                >
+                  Decline Optional
+                </button>
+                <button
+                    onClick={() => handleConsent('accepted')}
+                    className={`w-full py-2.5 text-sm font-semibold rounded-xl transition-colors shadow-sm ${isDarkMode ? 'bg-indigo-600 hover:bg-indigo-500 text-white' : 'bg-indigo-700 hover:bg-indigo-800 text-white'}`}
+                >
+                  Accept All
+                </button>
+              </div>
+            </div>
+        )}
       </div>
   );
 }
