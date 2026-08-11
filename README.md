@@ -20,15 +20,18 @@ Each project is built and served through the main application and can be accesse
 The project uses a central React application to organize and present the individual sandbox projects.
 
 ```text
-src/
-├── App.jsx                 # Main application and project routing
-├── ...
+public/
 └── games/
     ├── x3plorer/
     │   ├── README.md
-    │   ├── ...
-    │   └── ...
+    │   ├──index.html
+    │   ├── js/
+    |   ├── css/
     └── ...
+
+src/
+├── App.jsx                 # Main application and project routing
+├── ...
 ```
 
 The main application handles the overall project experience, while individual games and experiments remain isolated within their respective project directories.

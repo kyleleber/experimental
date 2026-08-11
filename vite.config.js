@@ -12,8 +12,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
-        'games/x3plorer': resolve(import.meta.dirname, '/games/x3plorer/index.html'),
-        'games/skeet': resolve(import.meta.dirname, '/games/skeet/index.html'),
+        'games/x3plorer': resolve(import.meta.dirname, '/public/games/x3plorer/index.html'),
+        'games/skeet': resolve(import.meta.dirname, '/public/games/skeet/index.html'),
       },
     },
   },
