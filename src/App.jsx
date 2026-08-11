@@ -12,6 +12,16 @@ const games = [
     repoUrl: 'https://github.com/kyleleber/experimental/tree/main/games/x3plorer',
     featured: true,
   },
+  {
+    id: 'skeet',
+    title: 'Skeet / Trap Shooting',
+    description: 'An interactive 3D skeet/trap shooting simulator featuring customizable chokes, pellet spread physics, and dynamic target tracking.',
+    tags: ['JavaScript', 'X3D', 'Physics', 'WebGL'],
+    status: 'In Development',
+    playUrl: '/games/skeet/',
+    repoUrl: 'https://github.com/kyleleber/experimental/tree/main/games/skeet',
+    featured: false,
+  },
 ];
 
 export default function App() {
