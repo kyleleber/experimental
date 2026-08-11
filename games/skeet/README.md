@@ -10,15 +10,15 @@ Test your reflexes and accuracy across multiple shooting disciplines with custom
 
 * **Trap Shooting**
 
-    * Targets launch from a single bunker directly in front of the shooter.
-    * Targets fly toward(or away if configured) at randomized angles and elevations.
-    * Each launch creates a different shooting challenge.
+  * Targets launch from a single bunker directly in front of the shooter.
+  * Targets fly toward (or away if configured) at randomized angles and elevations.
+  * Each launch creates a different shooting challenge.
 
 * **Skeet Shooting**
 
-    * Targets cross laterally through the shooter's field of view.
-    * Targets launch from opposing high and low houses.
-    * Designed to challenge timing, tracking, and reaction speed.
+  * Targets cross laterally through the shooter's field of view.
+  * Targets launch from opposing high and low houses.
+  * Designed to challenge timing, tracking, and reaction speed.
 
 ### 🔫 Custom Ballistics & Loadouts
 
@@ -26,18 +26,18 @@ Choose your shooting configuration before stepping onto the range.
 
 * **Cylinder Choke**
 
-    * Wide pellet spread.
-    * More forgiving at shorter ranges.
+  * Wide pellet spread.
+  * More forgiving at shorter ranges.
 
 * **Modified Choke**
 
-    * Balanced spread and precision.
-    * General-purpose configuration.
+  * Balanced spread and precision.
+  * General-purpose configuration.
 
 * **Full Choke**
 
-    * Tight pellet pattern.
-    * Greater precision required to hit targets.
+  * Tight pellet pattern.
+  * Greater precision required to hit targets.
 
 ### ⚡ Target Velocity
 
@@ -45,12 +45,12 @@ Adjust the difficulty by changing target speed:
 
 * **Standard Match**
 
-    * Normal target velocity for a more traditional shooting experience.
+  * Normal target velocity for a more traditional shooting experience.
 
 * **Hyper-Velocity**
 
-    * Significantly faster targets.
-    * Designed for a greater reflex and tracking challenge.
+  * Significantly faster targets.
+  * Designed for a greater reflex and tracking challenge.
 
 ### 🌐 Interactive 3D Engine
 
@@ -70,8 +70,6 @@ Features include:
 * Dynamic target trajectories
 * HUD and score tracking
 
----
-
 ## Technology Stack
 
 | Technology             | Purpose                                       |
@@ -82,8 +80,6 @@ Features include:
 | **Tailwind CSS**       | Interface and HUD styling                     |
 | **HTML5**              | Application structure                         |
 | **WebGL**              | Hardware-accelerated 3D rendering             |
-
----
 
 ## Project Structure
 
@@ -117,8 +113,6 @@ It is responsible for:
 * Providing the initial target nodes
 * Hosting the game canvas and HUD
 
----
-
 ### `css/styles.css`
 
 Contains custom styling that supplements the Tailwind UI.
@@ -131,8 +125,6 @@ Responsibilities include:
 * Overflow prevention
 * Gameplay-specific visual overrides
 * Custom UI behavior not handled directly by Tailwind
-
----
 
 ### `js/ballistics.js`
 
@@ -156,8 +148,6 @@ Cylinder  → Wide spread
 Modified  → Balanced spread
 Full      → Tight spread
 ```
-
----
 
 ### `js/game.js`
 
@@ -188,8 +178,6 @@ Target speed can be modified using the selected difficulty:
 Standard Match → Normal target velocity
 Hyper-Velocity → Increased target velocity
 ```
-
----
 
 ## How the Shooting System Works
 
@@ -230,8 +218,6 @@ Target shatters
 
 This allows the simulation to model the difference between a wide, forgiving pattern and a tighter precision-oriented pattern.
 
----
-
 ## Game Modes
 
 ### Trap
@@ -254,69 +240,6 @@ Skeet mode focuses on crossing targets.
 Targets are launched from opposing sides of the shooting range and travel laterally across the player's field of view.
 
 The player must track the target and fire at the appropriate moment.
-
----
-
-## Getting Started
-
-### 1. Clone or Download
-
-Clone the repository or download the project files to your local machine.
-
-### 2. Maintain the Project Structure
-
-Make sure the files are located in their expected directories:
-
-```text
-index.html
-css/styles.css
-js/ballistics.js
-js/game.js
-```
-
-### 3. Run the Game
-
-The game can be opened directly in a modern browser that supports the required X3DOM/WebGL functionality.
-
-For the best development experience, however, serve the project through a local web server.
-
-For example, with **VS Code Live Server**:
-
-1. Open the project directory in VS Code.
-2. Install the Live Server extension if necessary.
-3. Right-click `index.html`.
-4. Select **Open with Live Server**.
-5. The game will open in your browser.
-
-A simple local HTTP server can also be used:
-
-```bash
-python3 -m http.server 8000
-```
-
-Then open:
-
-```text
-http://localhost:8000/
-```
-
----
-
-## Playing the Game
-
-Once the game is running:
-
-1. Configure your shooting loadout.
-2. Choose a choke.
-3. Select the target velocity.
-4. Choose **Trap** or **Skeet**.
-5. Step up to the firing line.
-6. Track the target with the crosshair.
-7. Fire when ready.
-8. Watch the target for a hit or miss.
-9. Continue shooting and build your score.
-
----
 
 ## Development Notes
 
@@ -341,8 +264,6 @@ This also makes it easier to add future features such as:
 * Sound effects and environmental audio
 * More detailed target destruction
 
----
-
 ## Browser Compatibility
 
 The game requires a modern browser with support for:
@@ -355,15 +276,11 @@ The game requires a modern browser with support for:
 
 For development, running the project through a local HTTP server is recommended rather than relying exclusively on `file://` loading.
 
----
-
 ## Project Goal
 
 The goal of this project is to create a lightweight, interactive shooting simulation that demonstrates what can be accomplished with browser-based 3D technologies without requiring a traditional game engine.
 
 It combines **X3D/X3DOM scene rendering**, **JavaScript gameplay logic**, and **procedural ballistics** into a self-contained browser game.
-
----
 
 ## License
 
@@ -371,6 +288,6 @@ This project is licensed under the MIT License.
 
 ---
 
-
 **X3D Skeet & Trap Shooting Simulation**
+
 *A browser-based 3D clay shooting experience built with X3DOM and JavaScript.*
